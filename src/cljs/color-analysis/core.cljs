@@ -3,7 +3,7 @@
 
 (enable-console-print!)
 
-(set! (.-innerHTML (.getElementById js/document "app")) "<h1>Circles?</h1>")
+;(set! (.-innerHTML (.getElementById js/document "app")) "<h1>Circles?</h1>")
 
 (def values [
              { :color "#1e0821" :value 685 }
@@ -44,15 +44,15 @@
     (selectAll "circle.circle-viz")))
 
 (defn ticked []
-  (def u (.. svg
+  (def circles (.. svg
              (selectAll "circle")
              (data (clj->js (.nodes simulation)))))
-  (.. u
+  (.. circles
       (enter)
       (append "circle")
       (attr "fill" (fn [d] (.-color d)))
       (attr "r" #(radius-scale (.-value %)))
-      (merge u)
+      (merge circles)
       (attr "cx" #(.-x %))
       (attr "cy" #(.-y %)))
 
