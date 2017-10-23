@@ -38,10 +38,6 @@
              (attr "width" width)
              (attr "height" height)))
 
-(def circles (.. svg
-                 (append "g")
-                 (classed "circles-container" true)
-    (selectAll "circle.circle-viz")))
 
 (defn ticked []
   (def circles (.. svg
@@ -56,7 +52,7 @@
       (attr "cx" #(.-x %))
       (attr "cy" #(.-y %)))
 
-  (.. u (exit) (remove)))
+  (.. circles (exit) (remove)))
 
 (def simulation (.. js/d3
                     (forceSimulation (clj->js values))
