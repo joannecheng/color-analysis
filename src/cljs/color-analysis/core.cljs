@@ -8,42 +8,42 @@
 
 ;(set! (.-innerHTML (.getElementById js/document "app")) "<h1>Circles?</h1>")
 
-(def values (get (nth (color-analysis.data/values) 1) :values))
-
-(def width 960)
-(def height 500)
+(def color-data (color-analysis.data/values))
 
 (def radius-scale (.. js/d3
                       (scaleSqrt)
                       (domain #js [1 900])
-                      (range #js [1 30])))
+                      (range #js [1 20])))
 
-(def svg (.. js/d3
-             (select "#app")
-             (append "svg")
-             (attr "width" width)
-             (attr "height" height)))
+(def counter (atom 1))
+(defn next-value [] (swap! counter inc))
 
+(defn ticked [container-number simulation]
+  (def container-string (str "svg[data-scene-number=\"" container-number "\"]"))
+  (def container (clj->js (.select js/d3 container-string)))
 
-(defn ticked []
-  ;change to let?
-  (def circles (.. svg
-             (selectAll "circle")
-             (data (clj->js (.nodes simulation)))))
-  (.. circles
-      (enter)
-      (append "circle")
-      (attr "fill" (fn [d] (.-color d)))
-      (attr "r" #(radius-scale (.-value %)))
-      (merge circles)
-      (attr "cx" #(.-x %))
-      (attr "cy" #(.-y %)))
+  (let [circles (.. container
+                    (selectAll "circle")
+                    (data (clj->js (.nodes simulation))))]
 
-  (.. circles (exit) (remove)))
+    (.. circles
+        (enter)
+        (append "circle")
+        (attr "fill" (fn [d] (.-color d)))
+        (attr "r" #(radius-scale (.-value %)))
+        (merge circles)
+        (attr "cx" #(.-x %))
+        (attr "cy" #(.-y %)))
 
-(def simulation (.. js/d3
-                    (forceSimulation (clj->js values))
-                    (force "charge", (.strength (.forceManyBody js/d3) 5))
-                    (force "center", (.forceCenter js/d3 300 250))
-                    (force "collision", (.radius (.forceCollide js/d3) #(radius-scale (.-value %))))
-                    (on "tick" ticked))) ; todo: only tick 100 times
+    (.. circles (exit) (remove)) ))
+
+(doseq [item color-data]
+  (let [simulation
+        (.. js/d3
+            (forceSimulation (clj->js (item :values)))
+            (force "charge", (.strength (.forceManyBody js/d3) 6))
+            (force "center", (.forceCenter js/d3 58 65))
+            (force "collision",
+                   (.radius (.forceCollide js/d3) #(radius-scale (.-value %)))))]
+
+    (.. simulation (on "tick" #(ticked (item :name) simulation))) ))
