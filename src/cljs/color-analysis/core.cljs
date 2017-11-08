@@ -12,8 +12,8 @@
 
 (def radius-scale (.. js/d3
                       (scaleSqrt)
-                      (domain #js [1 900])
-                      (range #js [1 20])))
+                      (domain #js [1 1313])
+                      (range #js [0.5 18])))
 
 (def counter (atom 1))
 (defn next-value [] (swap! counter inc))
