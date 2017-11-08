@@ -3,3 +3,7 @@ html, body {
     background-color: #fefefe;
     font-family: Lato, Helvetica, Arial, sans-serif;
 }
+
+.viz-container {
+  padding-left: 1em;
+}
