@@ -1,7 +1,9 @@
 (ns color-analysis.core
   (:require [cljsjs.d3]
             [color-analysis.dna-data]
-            [color-analysis.data]))
+            [color-analysis.data]
+            [color-analysis-overview.core]
+            ))
 
 
 (enable-console-print!)

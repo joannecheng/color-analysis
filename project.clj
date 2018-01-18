@@ -3,16 +3,20 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [cljsjs/d3 "4.2.2-0"]]
 
-  :source-paths ["src/clj"]
+  :source-paths [ "src/clj"]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.4"]
+            [lein-figwheel "0.5.14"]
+            [cider/cider-nrepl "0.16.0"]]
 
   :clean-targets ^{:protect false} [:target-path :compile-path "resources/public/js/compiled"]
 
   :cljsbuild {:builds
               {:dev {:source-paths ["src/cljs"]
+                     :figwheel true
                      :compiler {:main color-analysis.core
                                 :optimizations :none
                                 :output-to "resources/public/js/compiled/color-analysis.js"
